@@ -10,8 +10,8 @@
 // @match        https://web.whatsapp.com/
 // @run-at       document-idle
 // @grant        GM_addStyle
-// @updateURL    https://raw.githubusercontent.com/dogwong/WhatsGoingOn/master/WhatsGoingOn.js
-// @downloadURL  https://raw.githubusercontent.com/dogwong/WhatsGoingOn/master/WhatsGoingOn.js
+// @updateURL    https://raw.githubusercontent.com/dogwong/WhatsGoingOn/master/WhatsGoingOn.user.js
+// @downloadURL  https://raw.githubusercontent.com/dogwong/WhatsGoingOn/master/WhatsGoingOn.user.js
 // ==/UserScript==
 
 /* jshint ignore:start */
