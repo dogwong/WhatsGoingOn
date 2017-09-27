@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WhatsGoingOn
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/dogwong/WhatsGoingOn
 // @version      0.0.0
 // @description  WhatsApp
 // @author       dogwong
