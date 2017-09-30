@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.2.1
+// @version      0.2.2
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -94,12 +94,17 @@ $("#btnTestGet").on("click", () => {
 });
 
 // Presence.models
-var presenceModelsLastUpdate_i = 0;
+var presenceModelsLastUpdate_i = -1;
 function presenceModelsUpdate () {
 	function update () {
 		if (typeof Store.Presence != "object") return 1000;
 		if (typeof Store.Presence.models != "object") return 1000;
 
+		presenceModelsLastUpdate_i++;
+		if (presenceModelsLastUpdate_i >= Store.Presence.models.length) {
+			presenceModelsLastUpdate_i = 0;
+			return 1000;
+		}
 
 		var model = Store.Presence.models[presenceModelsLastUpdate_i];
 		if (!model || !model.id) return 10;
@@ -135,11 +140,7 @@ function presenceModelsUpdate () {
 			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivLastSeen").text("Hidden");
 		}
 
-		presenceModelsLastUpdate_i++;
-		if (presenceModelsLastUpdate_i >= Store.Presence.models.length) {
-			presenceModelsLastUpdate_i = 0;
-			return 1000;
-		}
+
 
 		return 5;
 
