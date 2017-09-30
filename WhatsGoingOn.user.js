@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.2.0
+// @version      0.2.1
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -37,7 +37,7 @@ var templatePresenceModelsItem = "";
 
 function init () {
 	// wait for WhatsApp app interface is shown
-	if ($ && $("#pane-side") && typeof Store == "object") {
+	if ($ && $("#pane-side").length == 1 && typeof Store == "object") {
 		$("#divOpenPanel").show(0);
 
 		//intervalPresenceModelsAutoRefresh = setInterval(presenceModelsUpdateTick, )
