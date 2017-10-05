@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.2.2
+// @version      0.3.0
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://rawgit.com/dogwong/WhatsGoingOn/master/dateformat.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @match        https://web.whatsapp.com/
@@ -23,7 +24,7 @@ var inline_src = (<><![CDATA[
 
     // Your code here...
     GM_addStyle('.dwScript { font-family: "open sans",arial,sans-serif } .dwScript button { background-color: rgba(200, 200, 200, 1.0);padding-left: 5px;padding-right: 5px; border: 1px solid #000000;webkit-user-select: none;user-select: none;cursor: pointer; } #panelMain input { display: inline-block; } .dwScript .box { margin: 5px; padding: 5px; border-radius: 5px; border: 1px solid #000000; } .divHeader { font-size: 17px; font-weight: bold; padding-top: 3px; padding-bottom: 5px;} .inline { display: inline-block; } .flexRow {display: flex;flex-direction: row; } #divOpenPanel { position: absolute; top: 0px; left: 0px; height: 20px; width: 50px; background-color: rgba(26, 191, 29, 0.9);text-align: center;webkit-user-select: none;user-select: none;cursor: pointer; } #panelMain { position: absolute; top: 20px; left: 0px; height: calc(100% - 56px); width: calc(100% - 32px); background-color: rgba(255, 255, 255, 1.0);margin: 6px; padding: 8px; border-radius: 15px; border: 2px solid #1abf1d; font-size: 16px;overflow-y: scroll;webkit-user-select: text;user-select: text; } #panelMain div::selection, input::selection, textarea::selection {background-color: rgba(26, 191, 29, 0.5) !important; }#divTestArea { font-size: 14px; } #divTestArea div {padding-bottom: 3px;padding-right: 3px; }#divPresenceModels { } #divPresenceModels .item {border: 2px solid #999;margin-bottom: 2px; } #divPresenceModels .item.online {border: 2px solid rgb(89, 178, 57); } #divPresenceModels .item.offline {border: 2px solid rgb(252, 158, 0); } #divPresenceModels #sdivWSid, #sdivLastSeen, #sdivT {background-color: #DDD;width: 120px;overflow: hidden;text-align: left; }#divVersion {font-size: 12px; }');
-    $("body").append('<div id="divOpenPanel"> WGO </div><div id="panelMain" class="dwScript"> <!-- Phone# <input id="txtPhoneNo" type="text" name="Phone No" placeholder="85298765432"><br> Get... <button type="button" id="btnGetProfile">ProfilePic</button> <button type="button" id="btnGetStatus">Status</button> <button type="button" id="btnGetPresence">Presence</button><br> --><div id="divTestArea" class="box"> <div class="divHeader">Test Area</div> <div><input id="txtTestPhoneNo" type="text" name="Phone No" placeholder="Phone# 85298765432" size="16"><button type="button" id="btnTestGet">Get</button></div> <div class="flexRow"> <div> <img id="imgTestProfilePic" src="" height="50" width="50"> </div> <div> <div id="lblTestPhoneNo"> Phone ###### </div> <div id="lblTestStatus"> Status </div> <div id="lblTestPresence"> Last Seen </div> </div> </div> </div> <div id="divPresenceModels" class="box"> <div class="divHeader">Presence.models</div> <div class="inline"><input id="cbAutoRefresh" class="ui_save_value" type="checkbox" checked="" disabled=""></div> <label for="cbAutoRefresh">Auto Update UI</label><div id="sdivItemTemplate"> <div id="sdivItem" class="item offline" wsid="(wsid)"> <img id="sdivProfilePic" src="" height="20" width="20"> <div id="sdivWSid" class="inline">85298765432</div> <div id="sdivLastSeen" class="inline">23/12 12:34:56</div> <div id="sdivT" class="inline">23/12 12:34:56</div> </div> </div> <div id="sdivTableModels"></div> </div> <hr> Raw: <button type="button" id="btnPrintToConsole">console.log</button><br> <textarea id="txtRawResult" name="message" rows="3" cols="30">Hello World </textarea> <button type="button" id="btnRawResultCopy">Copy</button><br> <div id="divVersion"> Script:&nbsp; <div id="lblScriptVersion" class="ui_cell inline"> 0.2.0 </div> ,UI:&nbsp; <div id="lblUIVersion" class="ui_cell inline">v1710010122</div> </div> </div>');
+    $("body").append('<div id="divOpenPanel"> WGO </div><div id="panelMain" class="dwScript"> <!-- Phone# <input id="txtPhoneNo" type="text" name="Phone No" placeholder="85298765432"><br> Get... <button type="button" id="btnGetProfile">ProfilePic</button> <button type="button" id="btnGetStatus">Status</button> <button type="button" id="btnGetPresence">Presence</button><br> --> <div id="divVersion"> Script:&nbsp; <div id="lblScriptVersion" class="ui_cell inline"> 0.2.0 </div> ,UI:&nbsp; <div id="lblUIVersion" class="ui_cell inline">v1710060046</div> <a href="https://github.com/dogwong/WhatsGoingOn" target="_blank">Github</a> </div><div id="divTestArea" class="box"> <div class="divHeader">Test Area</div> <div><input id="txtTestPhoneNo" type="text" name="Phone No" placeholder="Phone# 85298765432" size="16"><button type="button" id="btnTestGet">Get</button></div> <div class="flexRow"> <div> <img id="imgTestProfilePic" src="" height="50" width="50"> </div> <div> <div id="lblTestPhoneNo"> Phone ###### </div> <div id="lblTestStatus"> Status </div> <div id="lblTestPresence"> Last Seen </div> </div> </div> </div> <div id="divPresenceModels" class="box"> <div class="divHeader">Presence.models</div> <div class="inline"><input id="cbAutoRefresh" class="ui_save_value" type="checkbox" checked="" disabled=""></div> <label for="cbAutoRefresh">Auto Update UI</label><div id="sdivItemTemplate"> <div id="sdivItem" class="item offline" data-wsid="(wsid)"> <img id="sdivProfilePic" class="profilepic" src="" height="20" width="20"> <div id="sdivWSid" class="inline phoneno">85298765432</div> <div id="sdivLastSeen" class="inline lastseen">23/12 12:34:56</div> <div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">23/12 12:34:56</div> </div> </div><div id="sdivTableModels"> Search <input class="search"> <button class="sort" data-sort="phoneno">Sort</button> <div id="sdivItemHeader"> <div id="sdivItem" class="item" data-wsid=""> Pic <div id="sdivWSid" class="inline phoneno">Phone #</div> <div id="sdivLastSeen" class="inline lastseen">Last Seen</div> <div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">Last On/Offline</div> </div> </div> <div class="list"></div> </div> </div> <hr> Raw: <button type="button" id="btnPrintToConsole">console.log</button><br> <textarea id="txtRawResult" name="message" rows="3" cols="30">Hello World </textarea> <button type="button" id="btnRawResultCopy">Copy</button><br></div>');
 
     $("#panelMain").hide(0);
     $("#divOpenPanel").hide(0);
@@ -31,6 +32,7 @@ var inline_src = (<><![CDATA[
 
 // variables
 var intervalPresenceModelsAutoRefresh;
+var presenceModelsUIList;
 
 // UI templates
 var templatePresenceModelsItem = "";
@@ -41,8 +43,21 @@ function init () {
 		$("#divOpenPanel").show(0);
 
 		//intervalPresenceModelsAutoRefresh = setInterval(presenceModelsUpdateTick, )
+
+		// Presence models list
 		templatePresenceModelsItem = $("#sdivItemTemplate").html().trim();
 		$("#sdivItemTemplate").html("");
+		presenceModelsUIList = new List($("#divPresenceModels #sdivTableModels")[0], {
+			item: templatePresenceModelsItem,
+			valueNames: [
+				{name: "item", data: ["wsid"]},
+				"phoneno",
+				"lastseen",
+				{name: "lastupdate", data: ["raw_lastupdate"]},
+				"lastupdate"
+			]
+		});
+
 		$("#lblScriptVersion").text(GM_info.script.version);
 		presenceModelsUpdate();
 	} else {
@@ -102,7 +117,7 @@ function presenceModelsUpdate () {
 
 		presenceModelsLastUpdate_i++;
 		if (presenceModelsLastUpdate_i >= Store.Presence.models.length) {
-			presenceModelsLastUpdate_i = 0;
+			presenceModelsLastUpdate_i = -1;
 			return 1000;
 		}
 
@@ -111,34 +126,48 @@ function presenceModelsUpdate () {
 		var wsid = model.id.split("@")[0];
 		if (isNaN(wsid)) return 10;
 
-		var target = $("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "']");
-		// Check if this item exists in table
-		if (!target.length) {
-			// no, create it
-			var newItem = templatePresenceModelsItem;
-			newItem = newItem.replace("(wsid)", wsid);
-			$("#divPresenceModels #sdivTableModels").append(newItem);
-			target = $("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "']");
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivWSid").text(wsid);
-			// last online state changed
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivT").text(new Date().format("dd/mm HH:MM:ss"));
+		var target_v2 = $("#divPresenceModels #sdivTableModels .item[data-wsid='" + wsid + "']");
+
+		// check exists in list
+		var listItem = presenceModelsUIList.get("wsid", wsid);
+		if (listItem.length == 0) {
+			// not exists, add
+			listItem = presenceModelsUIList.add({
+				wsid: wsid,
+				phoneno: wsid,
+				lastseen: "-",
+				raw_lastupdate: 0,
+				lastupdate: "-"
+			});
 		}
 
-		if (target.hasClass("offline") && model.isOnline) {
-			target.addClass("online");
-			target.removeClass("offline");
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivT").text(new Date().format("dd/mm HH:MM:ss"));
-		} else if (target.hasClass("online") && !model.isOnline) {
-			target.addClass("offline");
-			target.removeClass("online");
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivT").text(new Date().format("dd/mm HH:MM:ss"));
+		// online / offline
+		if (target_v2.hasClass("offline") && model.isOnline) {
+			target_v2.addClass("online");
+			target_v2.removeClass("offline");
+			listItem[0].values({
+				lastupdate: new Date().format("dd/mm HH:MM:ss")
+			});
+		} else if (target_v2.hasClass("online") && !model.isOnline) {
+			target_v2.addClass("offline");
+			target_v2.removeClass("online");
+			listItem[0].values({
+				lastupdate: new Date().format("dd/mm HH:MM:ss")
+			});
 		}
 		// last seen
-		if (model.all.chatstate.__x_t) {
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivLastSeen").text(new Date(model.all.chatstate.__x_t * 1000).format("dd/mm HH:MM:ss"));
-		} else {
-			$("#divPresenceModels #sdivTableModels #sdivItem[wsid='" + wsid + "'] #sdivLastSeen").text("Hidden");
+		if (model.all.chatstate.__x_t && model.all.chatstate.__x_t != listItem[0].values().raw_lastupdate) {
+			listItem[0].values({
+				raw_lastupdate: model.all.chatstate.__x_t,
+				lastseen: new Date(model.all.chatstate.__x_t * 1000).format("dd/mm HH:MM:ss")
+			});
+		} else if (!model.all.chatstate.__x_t && listItem[0].values().raw_lastupdate != -1) {
+			listItem[0].values({
+				raw_lastupdate: -1,
+				lastseen: "Hidden"
+			});
 		}
+
 
 
 
@@ -155,6 +184,8 @@ function presenceModelsUpdate () {
 $("#btnPrintToConsole").on("click", () => {
 	console.log(JSON.parse($("#txtRawResult").val()));
 });
+
+
 
 
 
