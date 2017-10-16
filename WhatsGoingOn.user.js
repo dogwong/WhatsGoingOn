@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.6.0
+// @version      0.6.1
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -227,8 +227,8 @@ $("body").append(
 '</div>'
 );
 
-//$("#panelMain").hide(0);
-//$("#divOpenPanel").hide(0);
+$("#panelMain").hide(0);
+$("#divOpenPanel").hide(0);
 
 // variables
 var presenceModelsUIList;
