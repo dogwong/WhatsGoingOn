@@ -1,14 +1,12 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.5.0
+// @version      0.6.0
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://rawgit.com/dogwong/WhatsGoingOn/master/dateformat.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @match        https://web.whatsapp.com/
 // @run-at       document-idle
 // @grant        GM_addStyle
@@ -16,33 +14,234 @@
 // @downloadURL  https://raw.githubusercontent.com/dogwong/WhatsGoingOn/master/WhatsGoingOn.user.js
 // ==/UserScript==
 
-/* jshint ignore:start */
-var inline_src = (<><![CDATA[
-/* jshint ignore:end */
-    /* jshint esnext: false */
-    /* jshint esversion: 6 */
 
-    // Your code here...
-    GM_addStyle('.dwScript { font-family: "open sans",arial,sans-serif } .dwScript button { background-color: rgba(200, 200, 200, 1.0);padding-left: 5px;padding-right: 5px; border: 1px solid #000000;webkit-user-select: none;user-select: none;cursor: pointer; } #panelMain input { display: inline-block; } .dwScript .box { margin: 5px; padding: 5px; border-radius: 5px;= border: 1px solid #000000; } .divHeader { font-size: 17px; font-weight: bold; padding-top: 3px; padding-bottom: 5px;} .inline { display: inline-block; } .flexRow {display: flex;flex-direction: row; } #divOpenPanel { position: absolute; top: 0px; left: 0px; height: 20px; width: 50px; background-color: rgba(26, 191, 29, 0.9);text-align: center;webkit-user-select: none;user-select: none;cursor: pointer; } #panelMain { position: absolute; top: 20px; left: 0px; height: calc(100% - 56px); width: calc(100% - 32px); background-color: rgba(255, 255, 255, 1.0);margin: 6px; padding: 8px; border-radius: 15px; border: 2px solid #1abf1d; font-size: 16px;overflow-y: scroll;webkit-user-select: text;user-select: text; } #panelMain div::selection, input::selection, textarea::selection {background-color: rgba(26, 191, 29, 0.5) !important; }#divTestArea { font-size: 14px; } #divTestArea div {padding-bottom: 3px;padding-right: 3px; }#divPresenceModels .list {max-height: 280px;overflow-y: scroll; } #divPresenceModels { } #divPresenceModels .item {border: 2px solid #999;margin-bottom: 2px; } #divPresenceModels .item.online {border: 2px solid rgb(89, 178, 57); } #divPresenceModels .item.offline {border: 2px solid rgb(252, 158, 0); } #divPresenceModels #sdivWSid, #sdivLastSeen, #sdivT, .staletime {background-color: #DDD;width: 120px;overflow: hidden;text-align: left; } #divPresenceModels .stale {background-color: #DDD;width: 40px;overflow: hidden;text-align: left; }#divVersion {font-size: 12px; }');
-    $("body").append('<div id="divOpenPanel"> WGO </div><div id="panelMain" class="dwScript"> <!-- Phone# <input id="txtPhoneNo" type="text" name="Phone No" placeholder="85298765432"><br> Get... <button type="button" id="btnGetProfile">ProfilePic</button> <button type="button" id="btnGetStatus">Status</button> <button type="button" id="btnGetPresence">Presence</button><br> --> <div id="divVersion"> Script:&nbsp; <div id="lblScriptVersion" class="ui_cell inline"> 0.2.0 </div> ,UI:&nbsp; <div id="lblUIVersion" class="ui_cell inline">v1710142315</div> <a href="https://github.com/dogwong/WhatsGoingOn" target="_blank">Github</a> </div><div id="divTestArea" class="box"> <div class="divHeader">Test Area</div> <div><input id="txtTestPhoneNo" type="text" name="Phone No" placeholder="Phone# 85298765432" size="16"><button type="button" id="btnTestGet">Get</button></div> <div class="flexRow"> <div> <img id="imgTestProfilePic" src="" height="50" width="50"> </div> <div> <div id="lblTestPhoneNo"> Phone ###### </div> <div id="lblTestStatus"> Status </div> <div id="lblTestPresence"> Last Seen </div> </div> </div> </div> <div id="divPresenceModels" class="box"> <div class="divHeader">Presence.models</div> <div class="inline"><input id="cbAutoRefresh" class="ui_save_value" type="checkbox" checked="" disabled=""></div> <label for="cbAutoRefresh">Auto Update UI</label><div id="sdivItemTemplate"> <div id="sdivItem" class="item offline" data-wsid="(wsid)"> <img id="sdivProfilePic" class="profilepic" src="" height="20" width="20"> <div id="sdivWSid" class="inline phoneno">85298765432</div> <div id="sdivLastSeen" class="inline lastseen">23/12 12:34:56</div> <div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">23/12 12:34:56</div> <div class="inline stale" data-raw_stale="">Yes</div> <div class="inline staletime">23/12 12:34:56</div> </div> </div><div id="sdivTableModels"> Search <input class="search"> <button class="sort" data-sort="phoneno">Sort</button> <div id="sdivItemHeader"> <div id="sdivItem" class="item" data-wsid=""> Pic <div id="sdivWSid" class="inline phoneno">Phone #</div> <div id="sdivLastSeen" class="inline lastseen">Last Seen</div> <div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">Last On/Offline</div> <div class="inline stale" data-raw_stale="">Stale</div> <div class="inline staletime">Stale Time</div> </div> </div> <div class="list"></div> </div> </div> <hr> <div id="" class="box"> <div class="divHeader">Debug</div> Raw: <button type="button" id="btnPrintToConsole">console.log</button><br> <textarea id="txtRawResult" name="message" rows="3" cols="30">Hello World </textarea> <button type="button" id="btnRawResultCopy">Copy</button><br> </div></div>');
+GM_addStyle(
+'.dwScript {'+
+'  font-family: "open sans",arial,sans-serif'+
+'}'+
+'.dwScript button {'+
+'  background-color: rgba(200, 200, 200, 1.0);'+
+'	padding-left: 5px;'+
+'	padding-right: 5px;'+
+'  border: 1px solid #000000;'+
+'	webkit-user-select: none;'+
+'	user-select: none;'+
+'	cursor: pointer;'+
+'}'+
+'#panelMain input {'+
+'  display: inline-block;'+
+'}'+
+'.dwScript .box {'+
+'  margin: 5px;'+
+'  padding: 5px;'+
+'  border-radius: 5px;'+
+'	'+
+'  border: 1px solid #000000;'+
+'}'+
+'.divHeader {'+
+'  font-size: 17px;'+
+'  font-weight: bold;'+
+'  padding-top: 3px;'+
+'  padding-bottom: 5px; '+
+'}'+
+'.inline {'+
+'  display: inline-block;'+
+'}'+
+'.flexRow {'+
+'   display: flex;'+
+'   flex-direction: row;'+
+'}'+
+'.debugUI {'+
+'	 display: none;'+
+'}'+
+'.debugUIShown {'+
+'	'+
+'}'+
+'#divOpenPanel {'+
+'  position: absolute;'+
+'  top: 0px;'+
+'  left: 0px;'+
+'  height: 20px;'+
+'  padding-left: 5px;'+
+'	padding-right: 5px;'+
+'  background-color: rgba(26, 191, 29, 0.9);'+
+'	text-align: center;'+
+'	webkit-user-select: none;'+
+'	user-select: none;'+
+'	cursor: pointer;'+
+'}'+
+'#panelMain {'+
+'  position: absolute;'+
+'  top: 20px;'+
+'  left: 0px;'+
+'  height: calc(100% - 56px);'+
+'  width: calc(100% - 32px);'+
+'  background-color: rgba(255, 255, 255, 1.0);'+
+'	margin: 6px;'+
+'  padding: 8px;'+
+'  border-radius: 15px;'+
+'  border: 2px solid #1abf1d;'+
+'  font-size: 16px;'+
+'	overflow-y: scroll;'+
+'	webkit-user-select: text;'+
+'	user-select: text;'+
+'}'+
+'#panelMain div::selection, input::selection, textarea::selection {'+
+'	background-color: rgba(26, 191, 29, 0.5) !important;'+
+'}'+
+'#divTestArea {'+
+'  font-size: 14px;'+
+'}'+
+'#divTestArea div {'+
+'	padding-bottom: 3px;'+
+'	padding-right: 3px;'+
+'}'+
+'#divPresenceModels .list {'+
+'	max-height: 280px;'+
+'	overflow-y: scroll;'+
+'}'+
+'#divPresenceModels {'+
+'	'+
+'}'+
+'#divPresenceModels .item {'+
+'	border: 2px solid #999;'+
+'	margin-bottom: 2px;'+
+'}'+
+'#divPresenceModels .item.online {'+
+'	border: 2px solid rgb(89, 178, 57);'+
+'}'+
+'#divPresenceModels .item.offline {'+
+'	border: 2px solid rgb(252, 158, 0);'+
+'}'+
+'#divPresenceModels button {'+
+'	vertical-align: text-bottom;'+
+'	margin-bottom: 0.2em;'+
+'}'+
+'#divPresenceModels #sdivWSid, #sdivLastSeen, #sdivT, .staletime {'+
+'	background-color: #DDD;'+
+'	width: 120px;'+
+'	overflow: hidden;'+
+'	text-align: left;'+
+'}'+
+'#divPresenceModels .stale {'+
+'	background-color: #DDD;'+
+'	width: 40px;'+
+'	overflow: hidden;'+
+'	text-align: left;'+
+'}'+
+'#divVersion {'+
+'	font-size: 12px;'+
+'}'
+);
 
-    $("#panelMain").hide(0);
-    $("#divOpenPanel").hide(0);
+$("body").append(
+'<div id="divOpenPanel" class="dwScript">'+
+'WGO 0.6.0'+
+'</div>'+
+'<div id="panelMain" class="dwScript">'+
+'  <!-- Phone# <input id="txtPhoneNo" type="text" name="Phone No" placeholder="85298765432"><br>'+
+'  Get...'+
+'  <button type="button" id="btnGetProfile">ProfilePic</button>'+
+'  <button type="button" id="btnGetStatus">Status</button>'+
+'  <button type="button" id="btnGetPresence">Presence</button><br> -->'+
+'  <div id="divVersion">'+
+'		Script:'+
+'		<div id="lblScriptVersion" class="ui_cell inline">0.2.0</div>'+
+'		, UI:'+
+'		<div id="lblUIVersion" class="ui_cell inline">v1710170026</div>'+
+'		<a href="https://github.com/dogwong/WhatsGoingOn" target="_blank">Github</a>'+
+'	</div>'+
+'	'+
+'  <div id="divTestArea" class="box">'+
+'    <div class="divHeader">Test Area</div>'+
+'    <div><input id="txtTestPhoneNo" type="text" name="Phone No" placeholder="Phone# 85298765432" size="16"><button type="button" id="btnTestGet">Get</button></div>'+
+'    <div class="flexRow">'+
+'      <div>'+
+'        <img id="imgTestProfilePic" src="" height="50" width="50">'+
+'      </div>'+
+'      <div>'+
+'        <div id="lblTestPhoneNo">'+
+'          Phone ######'+
+'        </div>'+
+'        <div id="lblTestStatus">'+
+'          Status'+
+'        </div>'+
+'        <div id="lblTestPresence">'+
+'          Last Seen'+
+'        </div>'+
+'      </div>'+
+'    </div>'+
+'  </div>'+
+'  <div id="divPresenceModels" class="box">'+
+'    <div class="divHeader">Presence.models</div>'+
+'		<div class="inline"><input id="cbAutoRefresh" class="ui_save_value" type="checkbox" checked="" disabled=""></div>'+
+'		<label for="cbAutoRefresh">Auto Update UI</label>'+
+'		'+
+'		<div id="sdivItemTemplate">'+
+'			<div id="sdivItem" class="item offline" data-wsid="(wsid)">'+
+'				<img id="sdivProfilePic" class="profilepic" src="" height="20" width="20">'+
+'				<div id="sdivWSid" class="inline phoneno">85298765432</div>'+
+'				<div id="sdivLastSeen" class="inline lastseen">23/12 12:34:56</div>'+
+'				<div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">23/12 12:34:56</div>'+
+'				<div class="inline stale" data-raw_stale="">Yes</div>'+
+'				<div class="inline staletime">23/12 12:34:56</div>'+
+'				<button type="button" id="" class="get">Get</button>'+
+'				<!-- <button type="button" id="" class="add">Add</button> -->'+
+'				<button type="button" id="" class="inject debugUI">Inject</button>'+
+'			</div>'+
+'		</div>'+
+'		'+
+'		<div id="sdivTableModels">'+
+'			Search <input class="search">'+
+'			<button class="sort" data-sort="phoneno">Sort</button>'+
+'			<div id="sdivItemHeader">'+
+'				<div id="sdivItem" class="item" data-wsid="" data-i="">'+
+'					Pic'+
+'					<div id="sdivWSid" class="inline phoneno">Phone #</div>'+
+'					<div id="sdivLastSeen" class="inline lastseen">Last Seen</div>'+
+'					<div id="sdivT" class="inline lastupdate" data-raw_lastupdate="">Last On/Offline</div>'+
+'					<div class="inline stale" data-raw_stale="">Stale</div>'+
+'				<div class="inline staletime">Stale Time</div>'+
+'				</div>'+
+'			</div>'+
+'			<div class="list"></div>'+
+'		</div>'+
+'	</div>'+
+'	'+
+'	<!-- <div id="" class="box">'+
+'	    <div class="divHeader">Record</div>'+
+'		'+
+'		'+
+'	</div> -->'+
+'	<hr>'+
+'	<div id="" class="box">'+
+'    <div class="divHeader">Debug</div>'+
+'		<button type="button" id="btnEnableDebugUI">Enable Debug</button><br>'+
+'		<div class="inline debugUI">Raw:&nbsp;</div><button type="button" id="btnPrintToConsole" class="debugUI">console.log</button><br>'+
+'		<textarea id="txtRawResult" name="message" rows="3" cols="30" class="debugUI"></textarea>'+
+'		<button type="button" id="btnRawResultCopy" class="debugUI">Copy</button><br>'+
+'		<button type="button" id="btnEventInject" class="debugUI">All models inject</button><br>'+
+'		<button type="button" id="btnLogPresence" class="debugUI">Log Presence</button><br>'+
+'	</div>'+
+'	'+
+'</div>'
+);
 
+//$("#panelMain").hide(0);
+//$("#divOpenPanel").hide(0);
 
 // variables
-var intervalPresenceModelsAutoRefresh;
+var presenceModelsUIList;
 var presenceModelsUIList;
 
 // UI templates
 var templatePresenceModelsItem = "";
+var templateRecordItem = "";
 
 function init () {
 	// wait for WhatsApp app interface is shown
 	if ($ && $("#pane-side").length == 1 && typeof Store == "object") {
 		$("#divOpenPanel").show(0);
-
-		//intervalPresenceModelsAutoRefresh = setInterval(presenceModelsUpdateTick, )
 
 		// Presence models list
 		templatePresenceModelsItem = $("#sdivItemTemplate").html().trim();
@@ -50,6 +249,7 @@ function init () {
 		presenceModelsUIList = new List($("#divPresenceModels #sdivTableModels")[0], {
 			item: templatePresenceModelsItem,
 			valueNames: [
+				{name: "item", data: ["i"]},
 				{name: "item", data: ["wsid"]},
 				"phoneno",
 				"lastseen",
@@ -61,6 +261,7 @@ function init () {
 			]
 		});
 
+		$("#divOpenPanel").text("WGO " + GM_info.script.version);
 		$("#lblScriptVersion").text(GM_info.script.version);
 		presenceModelsUpdate();
 	} else {
@@ -136,6 +337,7 @@ function presenceModelsUpdate () {
 		if (listItem.length == 0) {
 			// not exists, add
 			listItem = presenceModelsUIList.add({
+				i: presenceModelsLastUpdate_i,
 				wsid: wsid,
 				phoneno: wsid,
 				lastseen: "-",
@@ -144,6 +346,64 @@ function presenceModelsUpdate () {
 				stale: "Yes",
 				raw_stale: true,
 				staletime: "-",
+			});
+			$("#divPresenceModels .get").on("click", (event) => {
+				try {
+					if (event.target.parentElement.dataset["wsid"]) {
+						$("#txtTestPhoneNo").val(event.target.parentElement.dataset["wsid"]);
+						$("#btnTestGet").trigger("click");
+					} else {
+
+					}
+				} catch (e) {
+
+				}
+			});
+			$("#divPresenceModels .add").on("click", (event) => {
+				try {
+					if (event.target.parentElement.dataset["wsid"]) {
+
+					} else {
+
+					}
+				} catch (e) {
+
+				}
+			});
+			$("#divPresenceModels .inject").on("click", (event) => {
+				try {
+					if (event.target.parentElement.dataset["i"]) {
+						let i = event.target.parentElement.dataset["i"];
+						let wsid = event.target.parentElement.dataset["wsid"];
+						Store.Presence.models[i]._events.all.push({callback: (event) => {
+							var eventAry = event.split(":");
+							if (eventAry.length > 1) {
+								var pathAry = eventAry[1].split(".");
+								var result = Store.Presence.models[i];
+								try {
+									for (let j = 0; j < pathAry.length; j++) {
+										result = result[pathAry[j]];
+									}
+									console.log(i, wsid, "all", event, result);
+								} catch (e) {
+									console.log(i, wsid, "all", event);
+								}
+							} else {
+								console.log(i, wsid, "all", event);
+							}
+						}});
+						Store.Presence.models[i]._events["change:isOnline"].push({callback: (event) => {
+							console.log(i, wsid, "isOnline", event);
+						}});
+						Store.Presence.models[i]._events["change:chatActive"].push({callback: (event) => {
+							console.log(i, wsid, "chatActive", event);
+						}});
+					} else {
+
+					}
+				} catch (e) {
+					console.log("inject Error", event.target.parentElement.dataset["i"], event.target.parentElement.dataset["wsid"], e);
+				}
 			});
 		}
 
@@ -189,18 +449,62 @@ function presenceModelsUpdate () {
 				});
 			}
 		}
-
 		return 5;
 	}
-
 	setTimeout(presenceModelsUpdate, update());
 }
+
+
 
 
 
 // Debug
 $("#btnPrintToConsole").on("click", () => {
 	console.log(JSON.parse($("#txtRawResult").val()));
+});
+
+$("#btnEnableDebugUI").on("click", () => {
+	$(".dwScript .debugUI").addClass("debugUIShown");
+	$(".dwScript .debugUI").removeClass("debugUI");
+});
+
+$("#btnEventInject").on("click", () => {
+	for (let i = 0; i < Store.Presence.models.length; i++) {
+		if (!Store.Presence.models[i].__x_id) continue;
+		let wsid = Store.Presence.models[i].__x_id.split("@")[0];
+		if (isNaN(wsid)) continue;
+		try {
+			Store.Presence.models[i]._events.all.push({callback: (event) => {
+				var eventAry = event.split(":");
+				if (eventAry.length > 1) {
+					var pathAry = eventAry[1].split(".");
+					var result = Store.Presence.models[i];
+					try {
+						for (let j = 0; j < pathAry.length; j++) {
+							result = result[pathAry[j]];
+						}
+						console.log(i, wsid, "all", event, result);
+					} catch (e) {
+						console.log(i, wsid, "all", event);
+					}
+				} else {
+					console.log(i, wsid, "all", event);
+				}
+			}});
+			Store.Presence.models[i]._events["change:isOnline"].push({callback: (event) => {
+				console.log(i, wsid, "isOnline", event);
+			}});
+			Store.Presence.models[i]._events["change:chatActive"].push({callback: (event) => {
+				console.log(i, wsid, "chatActive", event);
+			}});
+		} catch (e) {
+			console.log("inject Error", i, wsid, e);
+		}
+	}
+});
+
+$("#btnLogPresence").on("click", () => {
+	console.log(Store.Presence.models);
 });
 
 
@@ -210,9 +514,3 @@ $("#btnPrintToConsole").on("click", () => {
 
 
 init();
-
-/* jshint ignore:start */
-]]></>).toString();
-var c = Babel.transform(inline_src, { presets: [ "es2015", "es2016" ] });
-eval(c.code);
-/* jshint ignore:end */
