@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WhatsGoingOn
 // @namespace    https://github.com/dogwong/WhatsGoingOn
-// @version      0.6.1
+// @version      0.6.2
 // @description  WhatsApp
 // @author       dogwong
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -347,7 +347,7 @@ function presenceModelsUpdate () {
 				raw_stale: true,
 				staletime: "-",
 			});
-			$("#divPresenceModels .get").on("click", (event) => {
+			$(`#divPresenceModels .item[data-wsid="${wsid}"] .get`).on("click", (event) => {
 				try {
 					if (event.target.parentElement.dataset["wsid"]) {
 						$("#txtTestPhoneNo").val(event.target.parentElement.dataset["wsid"]);
@@ -359,7 +359,7 @@ function presenceModelsUpdate () {
 
 				}
 			});
-			$("#divPresenceModels .add").on("click", (event) => {
+			$(`#divPresenceModels .item[data-wsid="${wsid}"] .add`).on("click", (event) => {
 				try {
 					if (event.target.parentElement.dataset["wsid"]) {
 
@@ -370,7 +370,7 @@ function presenceModelsUpdate () {
 
 				}
 			});
-			$("#divPresenceModels .inject").on("click", (event) => {
+			$(`#divPresenceModels .item[data-wsid="${wsid}"] .inject`).on("click", (event) => {
 				try {
 					if (event.target.parentElement.dataset["i"]) {
 						let i = event.target.parentElement.dataset["i"];
